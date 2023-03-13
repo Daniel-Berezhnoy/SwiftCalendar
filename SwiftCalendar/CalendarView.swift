@@ -10,6 +10,7 @@ import CoreData
 
 struct CalendarView: View {
     
+    @StateObject private var viewModel = CalendarViewModel()
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Day.date, ascending: true)])
     
@@ -24,7 +25,7 @@ struct CalendarView: View {
                 dayGrid
                 Spacer()
             }
-            .navigationTitle(currentMonth)
+            .navigationTitle(viewModel.currentMonthName)
             .padding()
         }
     }
@@ -51,7 +52,7 @@ struct CalendarView: View {
                         .background(.orange.opacity(day.didStudy ? 0.3 : 0))
                         .clipShape(Circle())
                     
-                    if dayNumberMatches(day.date!) {
+                    if viewModel.dayNumberMatches(day.date!) {
                         Circle().stroke(.orange, lineWidth: 4.5)
                     }
                 }
@@ -59,12 +60,19 @@ struct CalendarView: View {
         }
     }
     
-    var currentMonth: String {
-        Date().formatted(.dateTime.month(.wide))
-    }
-    
-    func dayNumberMatches(_ date: Date) -> Bool {
-        Date().formatted(.dateTime.day()) == date.formatted(.dateTime.day())
+    func createMonthDays(for date: Date) {
+        for dayOffset in 0 ..< date.numberOfDaysInMonth {
+            let newDay = Day(context: viewContext)
+            newDay.date = Calendar.current.date(byAdding: .day, value: dayOffset, to: date.startOfMonth)
+            newDay.didStudy = false
+        }
+        
+        do {
+            try viewContext.save()
+            print("✅ \(date.monthFullName) days created!")
+        } catch {
+            print("Error Saving CoreData Context! \n\(error.localizedDescription)")
+        }
     }
 }
 
