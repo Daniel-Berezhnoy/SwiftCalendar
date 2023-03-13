@@ -32,6 +32,7 @@ extension CalendarView {
             
             do {
                 try context.save()
+                print("✅ \(date.monthFullName) days created")
             } catch {
                 print("Error Saving CoreData Context! \n\(error.localizedDescription)")
             }

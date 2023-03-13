@@ -31,12 +31,7 @@ struct CalendarView: View {
             }
             .padding()
             .navigationTitle(viewModel.currentMonthName)
-            .onAppear {
-                if days.isEmpty {
-                    viewModel.createMonthDays(for: .now.startOfPreviousMonth, context: viewContext)
-                    viewModel.createMonthDays(for: .now, context: viewContext)
-                }
-            }
+            .onAppear { createCalendar() }
         }
     }
     
@@ -54,19 +49,35 @@ struct CalendarView: View {
     var dayGrid: some View {
         LazyVGrid(columns: viewModel.columns) {
             ForEach(days) { day in
-                ZStack {
-                    Text(day.date!.formatted(.dateTime.day()))
-                        .fontWeight(.bold)
-                        .foregroundColor(day.didStudy ? .orange : .secondary)
-                        .frame(maxWidth: .infinity, minHeight: 40)
-                        .background(.orange.opacity(day.didStudy ? 0.3 : 0))
-                        .clipShape(Circle())
+                
+                if day.date?.monthInt != Date().monthInt {
+                    Text("")
                     
-                    if viewModel.dayNumberMatches(day.date!) {
-                        Circle().stroke(.orange, lineWidth: 4.5)
+                } else {
+                    ZStack {
+                        Text(day.date!.formatted(.dateTime.day()))
+                            .fontWeight(.bold)
+                            .foregroundColor(day.didStudy ? .orange : .secondary)
+                            .frame(maxWidth: .infinity, minHeight: 40)
+                            .background(.orange.opacity(day.didStudy ? 0.3 : 0))
+                            .clipShape(Circle())
+                        
+                        if viewModel.dayNumberMatches(day.date!) {
+                            Circle().stroke(.orange, lineWidth: 4.5)
+                        }
                     }
                 }
             }
+        }
+    }
+    
+    func createCalendar() {
+        if days.isEmpty {
+            viewModel.createMonthDays(for: .now.startOfPreviousMonth, context: viewContext)
+            viewModel.createMonthDays(for: .now, context: viewContext)
+            
+        } else if days.count < 10 {
+            viewModel.createMonthDays(for: .now, context: viewContext)
         }
     }
 }
