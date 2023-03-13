@@ -68,15 +68,20 @@ struct PersistenceController {
     
     func migrateStore(for container: NSPersistentContainer) {
         
+        print("🚪 Entered the function")
+        
         // Creating a Store Coordinator
         let coordinator = container.persistentStoreCoordinator
         
         // Checking that the Old Store has data in it
         guard let oldStore = coordinator.persistentStore(for: oldStoreURL) else { return }
         
+        print("🔍 Old Store data found")
+        
         // Making the actual migration from the Old Store -> NEW Shared Store
         do {
             let _ = try coordinator.migratePersistentStore(oldStore, to: sharedStoreURL, type: .sqlite)
+            print("🏁 Migration successful")
         } catch {
             fatalError("Unable to migrate to Shared Store. \n\(error.localizedDescription)")
         }
@@ -84,6 +89,7 @@ struct PersistenceController {
         // Cleaning up the data from the Old Store
         do {
             try FileManager.default.removeItem(at: oldStoreURL)
+            print("🗑️ Old Store Deleted")
         } catch {
             print("Unable to delete Old Store. \n\(error.localizedDescription)")
         }
