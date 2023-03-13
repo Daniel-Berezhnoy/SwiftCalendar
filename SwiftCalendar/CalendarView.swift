@@ -25,8 +25,11 @@ struct CalendarView: View {
                 dayGrid
                 Spacer()
             }
-            .navigationTitle(viewModel.currentMonthName)
             .padding()
+            .navigationTitle(viewModel.currentMonthName)
+            .onAppear {
+                if days.isEmpty { viewModel.createMonthDays(for: .now, context: viewContext) }
+            }
         }
     }
     
@@ -57,21 +60,6 @@ struct CalendarView: View {
                     }
                 }
             }
-        }
-    }
-    
-    func createMonthDays(for date: Date) {
-        for dayOffset in 0 ..< date.numberOfDaysInMonth {
-            let newDay = Day(context: viewContext)
-            newDay.date = Calendar.current.date(byAdding: .day, value: dayOffset, to: date.startOfMonth)
-            newDay.didStudy = false
-        }
-        
-        do {
-            try viewContext.save()
-            print("✅ \(date.monthFullName) days created!")
-        } catch {
-            print("Error Saving CoreData Context! \n\(error.localizedDescription)")
         }
     }
 }

@@ -19,18 +19,18 @@ extension CalendarView {
             Date().formatted(.dateTime.day()) == date.formatted(.dateTime.day())
         }
         
-//        func createMonthDays(for date: Date, context: NSManagedObjectContext) {
-//            for dayOffset in 0 ..< date.numberOfDaysInMonth {
-//                let newDay = Day(context: context)
-//                newDay.date = Calendar.current.date(byAdding: .day, value: dayOffset, to: date.startOfMonth)
-//                newDay.didStudy = false
-//            }
-//
-//            do {
-//                try context.save()
-//            } catch {
-//                print("Error Saving CoreData Context! \n\(error.localizedDescription)")
-//            }
-//        }
+        func createMonthDays(for date: Date, context: NSManagedObjectContext) {
+            for dayOffset in 0 ..< date.numberOfDaysInMonth {
+                let newDay = Day(context: context)
+                newDay.date = Calendar.current.date(byAdding: .day, value: dayOffset, to: date.startOfMonth)
+                newDay.didStudy = false
+            }
+            
+            do {
+                try context.save()
+            } catch {
+                print("Error Saving CoreData Context! \n\(error.localizedDescription)")
+            }
+        }
     }
 }
