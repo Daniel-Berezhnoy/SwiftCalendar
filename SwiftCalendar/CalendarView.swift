@@ -12,11 +12,15 @@ struct CalendarView: View {
     
     @StateObject private var viewModel = CalendarViewModel()
     @Environment(\.managedObjectContext) private var viewContext
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Day.date, ascending: true)])
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Day.date, ascending: true)],
+        predicate: NSPredicate(format: "(date >= %@) AND (date <= %@)",
+                               Date().startOfCalendarWithPrefixDays as CVarArg,
+                               Date().endOfMonth as CVarArg)
+    )
     
     private var days: FetchedResults<Day>
-    let daysOfTheWeek = ["S", "M", "T", "W", "T", "F", "S",]
-    let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
     var body: some View {
         NavigationView {
@@ -28,14 +32,17 @@ struct CalendarView: View {
             .padding()
             .navigationTitle(viewModel.currentMonthName)
             .onAppear {
-                if days.isEmpty { viewModel.createMonthDays(for: .now, context: viewContext) }
+                if days.isEmpty {
+                    viewModel.createMonthDays(for: .now.startOfPreviousMonth, context: viewContext)
+                    viewModel.createMonthDays(for: .now, context: viewContext)
+                }
             }
         }
     }
     
     var header: some View {
         HStack {
-            ForEach(daysOfTheWeek, id: \.self) { day in
+            ForEach(viewModel.daysOfTheWeek, id: \.self) { day in
                 Text(day)
                     .fontWeight(.black)
                     .foregroundStyle(.orange)
@@ -45,7 +52,7 @@ struct CalendarView: View {
     }
     
     var dayGrid: some View {
-        LazyVGrid(columns: columns) {
+        LazyVGrid(columns: viewModel.columns) {
             ForEach(days) { day in
                 ZStack {
                     Text(day.date!.formatted(.dateTime.day()))

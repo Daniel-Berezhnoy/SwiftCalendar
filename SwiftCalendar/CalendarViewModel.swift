@@ -11,6 +11,10 @@ import CoreData
 extension CalendarView {
     @MainActor class CalendarViewModel: ObservableObject {
         
+        let daysOfTheWeek = ["S", "M", "T", "W", "T", "F", "S",]
+        
+        let columns = Array(repeating: GridItem(.flexible()), count: 7)
+        
         var currentMonthName: String {
             Date().monthFullName
         }
