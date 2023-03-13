@@ -22,18 +22,24 @@ struct StreakView: View {
     
     var body: some View {
         VStack {
-            Text("\(streakValue)")
-                .font(.system(size: 200, weight: .semibold, design: .rounded))
-                .foregroundColor(streakValue > 0 ? .orange : .pink)
-            
-            Text("Current Streak")
-                .font(.title2)
-                .bold()
-                .foregroundColor(.secondary)
+            numberOfDays
+            subtitle
         }
         .padding(.bottom, 100)
-        
         .onAppear { streakValue = calculateStreakValue() }
+    }
+    
+    var numberOfDays: some View {
+        Text("\(streakValue)")
+            .font(.system(size: 200, weight: .semibold, design: .rounded))
+            .foregroundColor(streakValue > 0 ? .orange : .pink)
+    }
+    
+    var subtitle: some View {
+        Text("Current Streak")
+            .font(.title2)
+            .bold()
+            .foregroundColor(.secondary)
     }
     
     func calculateStreakValue() -> Int {
