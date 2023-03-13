@@ -10,6 +10,8 @@ import CoreData
 
 @MainActor class CalendarViewModel: ObservableObject {
     
+    @Published var showingErrorAlert = false
+    
     let daysOfTheWeek = ["S", "M", "T", "W", "T", "F", "S",]
     
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
@@ -34,6 +36,22 @@ import CoreData
             print("✅ \(date.monthFullName) days created")
         } catch {
             print("Error Saving CoreData Context! \n\(error.localizedDescription)")
+        }
+    }
+    
+    func toggleDidStudy(for day: FetchedResults<Day>.Element, context: NSManagedObjectContext) {
+        if day.date!.dayInt <= Date().dayInt {
+            
+            day.didStudy.toggle()
+            
+            do {
+                try context.save()
+            } catch {
+                print(error.localizedDescription)
+            }
+            
+        } else {
+            showingErrorAlert = true
         }
     }
 }

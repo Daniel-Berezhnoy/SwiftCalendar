@@ -33,6 +33,11 @@ struct CalendarView: View {
             .navigationTitle(viewModel.currentMonthName)
             .onAppear { createCalendar() }
         }
+        .alert("Error", isPresented: $viewModel.showingErrorAlert) {
+            Button("Ok") { viewModel.showingErrorAlert = false }
+        } message: {
+            Text("You can't study in the future! \nPlease select the date when you actually studied")
+        }
     }
     
     var header: some View {
@@ -49,7 +54,26 @@ struct CalendarView: View {
     var dayGrid: some View {
         LazyVGrid(columns: viewModel.columns) {
             ForEach(days) { day in
-                DayLabel(for: day)
+                
+                if day.date?.monthInt != Date().monthInt {
+                    Text("")
+                    
+                } else {
+                    Text(day.date!.formatted(.dateTime.day()))
+                        .fontWeight(.bold)
+                        .foregroundColor(day.didStudy ? .orange : .secondary)
+                        .frame(maxWidth: .infinity, minHeight: 40)
+                        .background(.orange.opacity(day.didStudy ? 0.3 : 0))
+                        .clipShape(Circle())
+                        .overlay {
+                            if viewModel.dayNumberMatches(day.date!) {
+                                Circle().stroke(.orange, lineWidth: 4)
+                            }
+                        }
+                        .onTapGesture {
+                            viewModel.toggleDidStudy(for: day, context: viewContext)
+                        }
+                }
             }
         }
     }
@@ -69,38 +93,5 @@ struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
         CalendarView()
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
-}
-
-struct DayLabel: View {
-    
-    @StateObject private var viewModel = CalendarViewModel()
-    let day: FetchedResults<Day>.Element
-    
-    var body: some View {
-        if isPreviousMonth {
-            Text("")
-            
-        } else {
-            Text(day.date!.formatted(.dateTime.day()))
-                .fontWeight(.bold)
-                .foregroundColor(day.didStudy ? .orange : .secondary)
-                .frame(maxWidth: .infinity, minHeight: 40)
-                .background(.orange.opacity(day.didStudy ? 0.3 : 0))
-                .clipShape(Circle())
-                .overlay {
-                    if viewModel.dayNumberMatches(day.date!) {
-                        Circle().stroke(.orange, lineWidth: 4)
-                    }
-                }
-        }
-    }
-    
-    var isPreviousMonth: Bool {
-        day.date?.monthInt != Date().monthInt
-    }
-    
-    init(for day: FetchedResults<Day>.Element) {
-        self.day = day
     }
 }
