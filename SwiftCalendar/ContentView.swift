@@ -9,46 +9,62 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Day.date, ascending: true)],
-        animation: .default
-    )
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Day.date, ascending: true)])
     
     private var days: FetchedResults<Day>
-    
     let daysOfTheWeek = ["S", "M", "T", "W", "T", "F", "S",]
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
     var body: some View {
         NavigationView {
             VStack {
-                HStack {
-                    ForEach(daysOfTheWeek, id: \.self) { day in
-                        Text(day)
-                            .fontWeight(.black)
-                            .foregroundStyle(.orange)
-                            .frame(maxWidth: .infinity)
-                    }
-                }
-                
-                LazyVGrid(columns: columns) {
-                    ForEach(days) { day in
-                        Text(day.date!.formatted(.dateTime.day()))
-                            .fontWeight(.bold)
-                            .foregroundColor(day.didStudy ? .orange : .secondary)
-                            .frame(maxWidth: .infinity, minHeight: 40)
-                            .background(.orange.opacity(day.didStudy ? 0.3 : 0))
-                            .clipShape(Circle())
-                    }
-                }
-                
+                header
+                dayGrid
                 Spacer()
             }
-            .navigationTitle(Date().formatted(.dateTime.month(.wide)))
+            .navigationTitle(currentMonth)
             .padding()
         }
+    }
+    
+    var header: some View {
+        HStack {
+            ForEach(daysOfTheWeek, id: \.self) { day in
+                Text(day)
+                    .fontWeight(.black)
+                    .foregroundStyle(.orange)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+    }
+    
+    var dayGrid: some View {
+        LazyVGrid(columns: columns) {
+            ForEach(days) { day in
+                ZStack {
+                    Text(day.date!.formatted(.dateTime.day()))
+                        .fontWeight(.bold)
+                        .foregroundColor(day.didStudy ? .orange : .secondary)
+                        .frame(maxWidth: .infinity, minHeight: 40)
+                        .background(.orange.opacity(day.didStudy ? 0.3 : 0))
+                        .clipShape(Circle())
+                    
+                    if dayNumberMatches(day.date!) {
+                        Circle().stroke(.orange, lineWidth: 4.5)
+                    }
+                }
+            }
+        }
+    }
+    
+    var currentMonth: String {
+        Date().formatted(.dateTime.month(.wide))
+    }
+    
+    func dayNumberMatches(_ date: Date) -> Bool {
+        Date().formatted(.dateTime.day()) == date.formatted(.dateTime.day())
     }
 }
 
