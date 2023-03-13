@@ -49,24 +49,7 @@ struct CalendarView: View {
     var dayGrid: some View {
         LazyVGrid(columns: viewModel.columns) {
             ForEach(days) { day in
-                
-                if day.date?.monthInt != Date().monthInt {
-                    Text("")
-                    
-                } else {
-                    ZStack {
-                        Text(day.date!.formatted(.dateTime.day()))
-                            .fontWeight(.bold)
-                            .foregroundColor(day.didStudy ? .orange : .secondary)
-                            .frame(maxWidth: .infinity, minHeight: 40)
-                            .background(.orange.opacity(day.didStudy ? 0.3 : 0))
-                            .clipShape(Circle())
-                        
-                        if viewModel.dayNumberMatches(day.date!) {
-                            Circle().stroke(.orange, lineWidth: 4.5)
-                        }
-                    }
-                }
+                DayLabel(for: day)
             }
         }
     }
@@ -86,5 +69,38 @@ struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
         CalendarView()
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}
+
+struct DayLabel: View {
+    
+    @StateObject private var viewModel = CalendarViewModel()
+    let day: FetchedResults<Day>.Element
+    
+    var body: some View {
+        if isPreviousMonth {
+            Text("")
+            
+        } else {
+            Text(day.date!.formatted(.dateTime.day()))
+                .fontWeight(.bold)
+                .foregroundColor(day.didStudy ? .orange : .secondary)
+                .frame(maxWidth: .infinity, minHeight: 40)
+                .background(.orange.opacity(day.didStudy ? 0.3 : 0))
+                .clipShape(Circle())
+                .overlay {
+                    if viewModel.dayNumberMatches(day.date!) {
+                        Circle().stroke(.orange, lineWidth: 4)
+                    }
+                }
+        }
+    }
+    
+    var isPreviousMonth: Bool {
+        day.date?.monthInt != Date().monthInt
+    }
+    
+    init(for day: FetchedResults<Day>.Element) {
+        self.day = day
     }
 }
