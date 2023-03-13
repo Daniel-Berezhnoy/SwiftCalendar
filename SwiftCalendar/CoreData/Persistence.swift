@@ -10,6 +10,18 @@ import CoreData
 struct PersistenceController {
     
     static let shared = PersistenceController()
+    let databaseName = "SwiftCalendar.sqlite"
+    
+    var oldStoreURL: URL {
+        let directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        return directory.appending(component: databaseName)
+//        .applicationSupportDirectory.appending(path: databaseName)
+    }
+    
+    var sharedStoreURL: URL {
+        let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.daniel.SwiftCalendar")!
+        return container.appending(component: databaseName)
+    }
 
     static var preview: PersistenceController = {
         
@@ -38,7 +50,12 @@ struct PersistenceController {
     init(inMemory: Bool = false) {
         
         container = NSPersistentContainer(name: "SwiftCalendar")
-        if inMemory { container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null") }
+        
+        if inMemory {
+            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+        } else {
+            container.persistentStoreDescriptions.first!.url = sharedStoreURL
+        }
         
         container.loadPersistentStores { storeDescription, error in
             if let error = error as NSError? {
@@ -47,5 +64,28 @@ struct PersistenceController {
         }
         
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+    
+    func migrateStore(for container: NSPersistentContainer) {
+        
+        // Creating a Store Coordinator
+        let coordinator = container.persistentStoreCoordinator
+        
+        // Checking that the Old Store has data in it
+        guard let oldStore = coordinator.persistentStore(for: oldStoreURL) else { return }
+        
+        // Making the actual migration from the Old Store -> NEW Shared Store
+        do {
+            let _ = try coordinator.migratePersistentStore(oldStore, to: sharedStoreURL, type: .sqlite)
+        } catch {
+            fatalError("Unable to migrate to Shared Store. \n\(error.localizedDescription)")
+        }
+        
+        // Cleaning up the data from the Old Store
+        do {
+            try FileManager.default.removeItem(at: oldStoreURL)
+        } catch {
+            print("Unable to delete Old Store. \n\(error.localizedDescription)")
+        }
     }
 }
