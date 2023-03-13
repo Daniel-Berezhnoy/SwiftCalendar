@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  CalendarView.swift
 //  SwiftCalendar
 //
 //  Created by Daniel Berezhnoy on 3/12/23.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct CalendarView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Day.date, ascending: true)])
@@ -68,9 +68,9 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct CalendarView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        CalendarView()
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
