@@ -10,22 +10,44 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-
+    
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Day.date, ascending: true)],
         animation: .default
     )
     
     private var days: FetchedResults<Day>
-
+    
+    let daysOfTheWeek = ["S", "M", "T", "W", "T", "F", "S",]
+    let columns = Array(repeating: GridItem(.flexible()), count: 7)
+    
     var body: some View {
         NavigationView {
-            List {
-                ForEach(days) { day in
-                    Text(day.date!.formatted())
+            VStack {
+                HStack {
+                    ForEach(daysOfTheWeek, id: \.self) { day in
+                        Text(day)
+                            .fontWeight(.black)
+                            .foregroundStyle(.orange)
+                            .frame(maxWidth: .infinity)
+                    }
                 }
+                
+                LazyVGrid(columns: columns) {
+                    ForEach(days) { day in
+                        Text(day.date!.formatted(.dateTime.day()))
+                            .fontWeight(.bold)
+                            .foregroundColor(day.didStudy ? .orange : .secondary)
+                            .frame(maxWidth: .infinity, minHeight: 40)
+                            .background(.orange.opacity(day.didStudy ? 0.3 : 0))
+                            .clipShape(Circle())
+                    }
+                }
+                
+                Spacer()
             }
-            .navigationTitle("Swift Calendar")
+            .navigationTitle(Date().formatted(.dateTime.month(.wide)))
+            .padding()
         }
     }
 }

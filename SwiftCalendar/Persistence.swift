@@ -16,9 +16,11 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         
-        for _ in 0 ..< 10 {
+        let startDate = Calendar.current.dateInterval(of: .month, for: .now)?.start ?? .now
+        
+        for dayOffset in 0 ..< 30 {
             let newDay = Day(context: viewContext)
-            newDay.date = Date()
+            newDay.date = Calendar.current.date(byAdding: .day, value: dayOffset, to: startDate)
             newDay.didStudy = Bool.random() 
         }
         
