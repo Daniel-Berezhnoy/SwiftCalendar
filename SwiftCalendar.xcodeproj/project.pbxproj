@@ -64,6 +64,8 @@
 		B963F7E029BF98AA00E0F75D /* SwiftCalendarWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftCalendarWidget.swift; sourceTree = "<group>"; };
 		B963F7E229BF98AB00E0F75D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B963F7E429BF98AB00E0F75D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B963F7EC29BF9CB100E0F75D /* SwiftCalendar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftCalendar.entitlements; sourceTree = "<group>"; };
+		B963F7ED29BF9CC800E0F75D /* SwiftCalendarWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftCalendarWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 		B963F7A929BE4CCC00E0F75D = {
 			isa = PBXGroup;
 			children = (
+				B963F7ED29BF9CC800E0F75D /* SwiftCalendarWidgetExtension.entitlements */,
 				B963F7B429BE4CCC00E0F75D /* SwiftCalendar */,
 				B963F7DD29BF98AA00E0F75D /* SwiftCalendarWidget */,
 				B963F7D829BF98AA00E0F75D /* Frameworks */,
@@ -108,6 +111,7 @@
 		B963F7B429BE4CCC00E0F75D /* SwiftCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				B963F7EC29BF9CB100E0F75D /* SwiftCalendar.entitlements */,
 				B963F7B529BE4CCC00E0F75D /* SwiftCalendarApp.swift */,
 				B963F7CE29BF186E00E0F75D /* Views */,
 				B963F7CB29BEE5D600E0F75D /* CoreData */,
@@ -430,6 +434,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SwiftCalendar/SwiftCalendar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6ADU7T5Q7V;
@@ -459,6 +464,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SwiftCalendar/SwiftCalendar.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6ADU7T5Q7V;
@@ -487,6 +493,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SwiftCalendarWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6ADU7T5Q7V;
@@ -514,6 +521,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SwiftCalendarWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6ADU7T5Q7V;
