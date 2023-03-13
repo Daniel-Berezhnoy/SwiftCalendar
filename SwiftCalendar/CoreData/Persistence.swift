@@ -15,7 +15,6 @@ struct PersistenceController {
     var oldStoreURL: URL {
         let directory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         return directory.appending(component: databaseName)
-//        .applicationSupportDirectory.appending(path: databaseName)
     }
     
     var sharedStoreURL: URL {
@@ -53,9 +52,13 @@ struct PersistenceController {
         
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        } else {
+            
+        } else if !FileManager.default.fileExists(atPath: oldStoreURL.path) {
+            print("🎅 Old Store doesn't exist. Using new shared URL")
             container.persistentStoreDescriptions.first!.url = sharedStoreURL
         }
+        
+        print("🕸️ Container URL: \(container.persistentStoreDescriptions.first!.url!)\n")
         
         container.loadPersistentStores { storeDescription, error in
             if let error = error as NSError? {
@@ -63,11 +66,11 @@ struct PersistenceController {
             }
         }
         
+        migrateStore(for: container)
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
     
     func migrateStore(for container: NSPersistentContainer) {
-        
         print("🚪 Entered the function")
         
         // Creating a Store Coordinator
@@ -75,7 +78,6 @@ struct PersistenceController {
         
         // Checking that the Old Store has data in it
         guard let oldStore = coordinator.persistentStore(for: oldStoreURL) else { return }
-        
         print("🔍 Old Store data found")
         
         // Making the actual migration from the Old Store -> NEW Shared Store
@@ -89,7 +91,7 @@ struct PersistenceController {
         // Cleaning up the data from the Old Store
         do {
             try FileManager.default.removeItem(at: oldStoreURL)
-            print("🗑️ Old Store Deleted")
+            print("🗑️ Old Store data deleted")
         } catch {
             print("Unable to delete Old Store. \n\(error.localizedDescription)")
         }
