@@ -39,25 +39,48 @@ struct SimpleEntry: TimelineEntry {
 }
 
 struct SwiftCalendarWidgetEntryView : View {
+    
     var entry: Provider.Entry
+    let columns = Array(repeating: GridItem(.flexible()), count: 7)
 
     var body: some View {
         HStack {
-            VStack {
-                Text("\(30)")
-                    .font(.system(size: 70, weight: .bold, design: .rounded))
-                    .foregroundColor(.orange)
-                
-                Text("day streak")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
+            streakView
+            calendar
+        }
+        .padding()
+    }
+    
+    var streakView: some View {
+        VStack {
+            Text("\(30)")
+                .font(.system(size: 70, weight: .bold, design: .rounded))
+                .foregroundColor(.orange)
             
-            VStack {
-                CalendarHeader(font: .body)
-                Text("Calendar Grid Here")
+            Text("day streak")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+    
+    var calendar: some View {
+        VStack {
+            CalendarHeader(font: .caption)
+            
+            LazyVGrid(columns: columns, spacing: 5) {
+                ForEach(0 ..< 31) { day in
+                    
+                    Text("\(day)")
+                        .font(.system(size: 10, weight: .bold))
+                        .fontWeight(.bold)
+                        .foregroundColor(.black.opacity(0.7))
+                        .frame(maxWidth: .infinity, minHeight: 19)
+                        .background(.orange.opacity(0.3))
+                        .clipShape(Circle())
+                }
             }
         }
+        .padding(.leading)
     }
 }
 
