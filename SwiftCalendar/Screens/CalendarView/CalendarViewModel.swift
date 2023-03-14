@@ -12,8 +12,6 @@ import CoreData
     
     @Published var showingErrorAlert = false
     
-    let daysOfTheWeek = ["S", "M", "T", "W", "T", "F", "S",]
-    
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
     var currentMonthName: String {

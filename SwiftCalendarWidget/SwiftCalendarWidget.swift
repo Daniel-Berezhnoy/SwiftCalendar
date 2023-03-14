@@ -42,7 +42,22 @@ struct SwiftCalendarWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        Text(entry.date, style: .time)
+        HStack {
+            VStack {
+                Text("\(30)")
+                    .font(.system(size: 70, weight: .bold, design: .rounded))
+                    .foregroundColor(.orange)
+                
+                Text("day streak")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            VStack {
+                CalendarHeader(font: .body)
+                Text("Calendar Grid Here")
+            }
+        }
     }
 }
 
@@ -55,12 +70,13 @@ struct SwiftCalendarWidget: Widget {
         }
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")
+        .supportedFamilies([.systemMedium])
     }
 }
 
 struct SwiftCalendarWidget_Previews: PreviewProvider {
     static var previews: some View {
         SwiftCalendarWidgetEntryView(entry: SimpleEntry(date: Date()))
-            .previewContext(WidgetPreviewContext(family: .systemSmall))
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }

@@ -41,14 +41,7 @@ struct CalendarView: View {
     }
     
     var header: some View {
-        HStack {
-            ForEach(viewModel.daysOfTheWeek, id: \.self) { day in
-                Text(day)
-                    .fontWeight(.black)
-                    .foregroundStyle(.orange)
-                    .frame(maxWidth: .infinity)
-            }
-        }
+        CalendarHeader()
     }
     
     var dayGrid: some View {
