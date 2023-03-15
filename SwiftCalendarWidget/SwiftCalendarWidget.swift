@@ -39,18 +39,16 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [CalendarEntry] = []
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = CalendarEntry(date: entryDate, days: [])
-            entries.append(entry)
+        do {
+            let days = try viewContext.fetch(dayFetchRequest)
+            let entry = CalendarEntry(date: Date(), days: days)
+            
+            let timeline = Timeline(entries: [entry], policy: .after(Date().endOfDay))
+            completion(timeline)
+            
+        } catch {
+            print("Widget Failed to fetch days in the snapshot. \n\(error.localizedDescription)\n")
         }
-
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
     }
 }
 
