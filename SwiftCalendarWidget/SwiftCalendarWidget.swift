@@ -143,8 +143,8 @@ struct SwiftCalendarWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             SwiftCalendarWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
+        .configurationDisplayName("Swift Study Calendar")
+        .description("Track days you study Swift with Streaks!")
         .supportedFamilies([.systemMedium])
     }
 }
