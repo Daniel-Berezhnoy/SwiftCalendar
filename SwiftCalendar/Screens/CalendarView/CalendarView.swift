@@ -70,6 +70,10 @@ struct CalendarView: View {
         }
     }
     
+    func dayNumberMatches(_ date: Date) -> Bool {
+        Date().formatted(.dateTime.day()) == date.formatted(.dateTime.day())
+    }
+    
     func createCalendar() {
         if days.isEmpty {
             viewModel.createMonthDays(for: .now.startOfPreviousMonth, context: viewContext)

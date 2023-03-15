@@ -59,7 +59,7 @@ struct CalendarEntry: TimelineEntry {
 
 struct SwiftCalendarWidgetEntryView : View {
     
-    var entry: Provider.Entry
+    var entry: CalendarEntry
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
 
     var body: some View {
@@ -72,7 +72,7 @@ struct SwiftCalendarWidgetEntryView : View {
     
     var streakView: some View {
         VStack {
-            Text("\(30)")
+            Text("\(calculateStreakValue())")
                 .font(.system(size: 70, weight: .bold, design: .rounded))
                 .foregroundColor(.orange)
             
@@ -87,19 +87,52 @@ struct SwiftCalendarWidgetEntryView : View {
             CalendarHeader(font: .caption)
             
             LazyVGrid(columns: columns, spacing: 5) {
-                ForEach(0 ..< 31) { day in
+                ForEach(entry.days) { day in
                     
-                    Text("\(day)")
-                        .font(.system(size: 10, weight: .bold))
-                        .fontWeight(.bold)
-                        .foregroundColor(.black.opacity(0.7))
-                        .frame(maxWidth: .infinity, minHeight: 19)
-                        .background(.orange.opacity(0.3))
-                        .clipShape(Circle())
+                    if day.date?.monthInt != Date().monthInt {
+                        Text("")
+                    } else {
+                        Text(day.date!.formatted(.dateTime.day()))
+                            .font(.system(size: 10, weight: .bold))
+                            .fontWeight(.bold)
+                            .foregroundColor(day.didStudy ? .orange : .secondary)
+                            .frame(maxWidth: .infinity, minHeight: 19)
+                            .background(.orange.opacity(day.didStudy ? 0.3 : 0))
+                            .clipShape(Circle())
+                            .overlay {
+                                if dayNumberMatches(day.date!) {
+                                    Circle().stroke(.orange, lineWidth: 2)
+                                }
+                            }
+                    }
                 }
             }
         }
         .padding(.leading)
+    }
+    
+    func calculateStreakValue() -> Int {
+        guard !entry.days.isEmpty else { return 0 }
+        
+        var streakCount = 0
+        let nonFutureDays = entry.days.filter { $0.date!.dayInt <= Date().dayInt }
+        
+        for day in nonFutureDays.reversed() {
+            if day.didStudy {
+                streakCount += 1
+                
+            } else {
+                if day.date!.dayInt != Date().dayInt {
+                    break
+                }
+            }
+        }
+        
+        return streakCount
+    }
+    
+    func dayNumberMatches(_ date: Date) -> Bool {
+        Date().formatted(.dateTime.day()) == date.formatted(.dateTime.day())
     }
 }
 
