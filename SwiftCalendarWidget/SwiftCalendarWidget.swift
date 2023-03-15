@@ -9,13 +9,32 @@ import WidgetKit
 import SwiftUI
 
 struct Provider: TimelineProvider {
+    
+    let viewContext = PersistenceController.shared.container.viewContext
+    
     func placeholder(in context: Context) -> CalendarEntry {
         CalendarEntry(date: Date(), days: [])
     }
 
     func getSnapshot(in context: Context, completion: @escaping (CalendarEntry) -> ()) {
-        let entry = CalendarEntry(date: Date(), days: [])
-        completion(entry)
+        
+        // Creating and setting up our CoreData Request
+        let request = Day.fetchRequest()
+        
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Day.date, ascending: true)]
+        request.predicate = NSPredicate(format: "(date >= %@) AND (date <= %@)",
+                                        Date().startOfCalendarWithPrefixDays as CVarArg,
+                                        Date().endOfMonth as CVarArg)
+        
+        
+        // Creating an array of days with our real Core Data and passing it into the entry
+        do {
+            let days = try viewContext.fetch(request)
+            let entry = CalendarEntry(date: Date(), days: days)
+            completion(entry)
+        } catch {
+            print("Widget Failed to fetch days in the snapshot. \n\(error.localizedDescription)\n")
+        }
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {

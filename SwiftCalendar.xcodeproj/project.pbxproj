@@ -25,6 +25,8 @@
 		B963F7F429C11AD300E0F75D /* CalendarHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B963F7F229C11AD300E0F75D /* CalendarHeader.swift */; };
 		B963F7FA29C11CF700E0F75D /* SCTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B963F7F929C11CF700E0F75D /* SCTabView.swift */; };
 		B963F7FE29C264C000E0F75D /* SwiftCalendar.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B963F7C029BE4CCD00E0F75D /* SwiftCalendar.xcdatamodeld */; };
+		B963F7FF29C266D400E0F75D /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B963F7C829BEE5B900E0F75D /* Date+Ext.swift */; };
+		B963F80029C2675400E0F75D /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B963F7BE29BE4CCD00E0F75D /* Persistence.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -327,7 +329,9 @@
 				B963F7DF29BF98AA00E0F75D /* SwiftCalendarWidgetBundle.swift in Sources */,
 				B963F7FE29C264C000E0F75D /* SwiftCalendar.xcdatamodeld in Sources */,
 				B963F7E129BF98AA00E0F75D /* SwiftCalendarWidget.swift in Sources */,
+				B963F80029C2675400E0F75D /* Persistence.swift in Sources */,
 				B963F7F429C11AD300E0F75D /* CalendarHeader.swift in Sources */,
+				B963F7FF29C266D400E0F75D /* Date+Ext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
