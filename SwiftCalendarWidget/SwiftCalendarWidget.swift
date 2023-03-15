@@ -74,7 +74,7 @@ struct SwiftCalendarWidgetEntryView : View {
         VStack {
             Text("\(calculateStreakValue())")
                 .font(.system(size: 70, weight: .bold, design: .rounded))
-                .foregroundColor(.orange)
+                .foregroundColor(calculateStreakValue() > 0 ? .orange : .pink)
             
             Text("day streak")
                 .font(.caption)
