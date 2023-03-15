@@ -9,23 +9,23 @@ import WidgetKit
 import SwiftUI
 
 struct Provider: TimelineProvider {
-    func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date())
+    func placeholder(in context: Context) -> CalendarEntry {
+        CalendarEntry(date: Date(), days: [])
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        let entry = SimpleEntry(date: Date())
+    func getSnapshot(in context: Context, completion: @escaping (CalendarEntry) -> ()) {
+        let entry = CalendarEntry(date: Date(), days: [])
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        var entries: [SimpleEntry] = []
+        var entries: [CalendarEntry] = []
 
         // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
         for hourOffset in 0 ..< 5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate)
+            let entry = CalendarEntry(date: entryDate, days: [])
             entries.append(entry)
         }
 
@@ -34,8 +34,9 @@ struct Provider: TimelineProvider {
     }
 }
 
-struct SimpleEntry: TimelineEntry {
+struct CalendarEntry: TimelineEntry {
     let date: Date
+    let days: [Day]
 }
 
 struct SwiftCalendarWidgetEntryView : View {
@@ -99,7 +100,7 @@ struct SwiftCalendarWidget: Widget {
 
 struct SwiftCalendarWidget_Previews: PreviewProvider {
     static var previews: some View {
-        SwiftCalendarWidgetEntryView(entry: SimpleEntry(date: Date()))
+        SwiftCalendarWidgetEntryView(entry: CalendarEntry(date: Date(), days: []))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
     }
 }

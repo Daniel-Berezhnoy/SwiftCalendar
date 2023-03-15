@@ -24,6 +24,7 @@
 		B963F7F329C11AD300E0F75D /* CalendarHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B963F7F229C11AD300E0F75D /* CalendarHeader.swift */; };
 		B963F7F429C11AD300E0F75D /* CalendarHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B963F7F229C11AD300E0F75D /* CalendarHeader.swift */; };
 		B963F7FA29C11CF700E0F75D /* SCTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B963F7F929C11CF700E0F75D /* SCTabView.swift */; };
+		B963F7FE29C264C000E0F75D /* SwiftCalendar.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B963F7C029BE4CCD00E0F75D /* SwiftCalendar.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +101,8 @@
 				B963F7B429BE4CCC00E0F75D /* SwiftCalendar */,
 				B963F7DD29BF98AA00E0F75D /* SwiftCalendarWidget */,
 				B963F7F529C11C6200E0F75D /* Shared Views */,
+				B963F7CB29BEE5D600E0F75D /* CoreData */,
+				B963F7CA29BEE5C500E0F75D /* Extensions */,
 				B963F7D829BF98AA00E0F75D /* Frameworks */,
 				B963F7B329BE4CCC00E0F75D /* Products */,
 			);
@@ -120,8 +123,6 @@
 				B963F7EC29BF9CB100E0F75D /* SwiftCalendar.entitlements */,
 				B963F7B529BE4CCC00E0F75D /* SwiftCalendarApp.swift */,
 				B963F7CE29BF186E00E0F75D /* Screens */,
-				B963F7CB29BEE5D600E0F75D /* CoreData */,
-				B963F7CA29BEE5C500E0F75D /* Extensions */,
 				B963F7B929BE4CCD00E0F75D /* Assets.xcassets */,
 			);
 			path = SwiftCalendar;
@@ -324,6 +325,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B963F7DF29BF98AA00E0F75D /* SwiftCalendarWidgetBundle.swift in Sources */,
+				B963F7FE29C264C000E0F75D /* SwiftCalendar.xcdatamodeld in Sources */,
 				B963F7E129BF98AA00E0F75D /* SwiftCalendarWidget.swift in Sources */,
 				B963F7F429C11AD300E0F75D /* CalendarHeader.swift in Sources */,
 			);
