@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 import CoreData
 
 @MainActor class CalendarViewModel: ObservableObject {
@@ -38,12 +39,13 @@ import CoreData
     }
     
     func toggleDidStudy(for day: FetchedResults<Day>.Element, context: NSManagedObjectContext) {
+        
         if day.date!.dayInt <= Date().dayInt {
-            
             day.didStudy.toggle()
             
             do {
                 try context.save()
+                WidgetCenter.shared.reloadTimelines(ofKind: "SwiftCalendarWidget")
             } catch {
                 print(error.localizedDescription)
             }

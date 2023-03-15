@@ -50,7 +50,6 @@ struct CalendarView: View {
                 
                 if day.date?.monthInt != Date().monthInt {
                     Text("")
-                    
                 } else {
                     Text(day.date!.formatted(.dateTime.day()))
                         .fontWeight(.bold)
