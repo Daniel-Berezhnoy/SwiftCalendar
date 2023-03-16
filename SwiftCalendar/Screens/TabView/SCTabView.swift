@@ -8,14 +8,19 @@
 import SwiftUI
 
 struct SCTabView: View {
+    @State private var selectedTab = 0
+    
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             CalendarView()
                 .tabItem { Label("Calendar", systemImage: "calendar") }
+                .tag(0)
             
             StreakView()
                 .tabItem { Label("Streak", systemImage: "swift") }
+                .tag(1)
         }
+        .onOpenURL { url in selectedTab = url.absoluteString == "calendar" ? 0 : 1 }
     }
 }
 

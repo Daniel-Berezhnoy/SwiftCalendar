@@ -71,44 +71,48 @@ struct SwiftCalendarWidgetEntryView : View {
     }
     
     var streakView: some View {
-        VStack {
-            Text("\(calculateStreakValue())")
-                .font(.system(size: 70, weight: .bold, design: .rounded))
-                .foregroundColor(calculateStreakValue() > 0 ? .orange : .pink)
-            
-            Text("day streak")
-                .font(.caption)
-                .foregroundColor(.secondary)
+        Link(destination: URL(string: "streak")!) {
+            VStack {
+                Text("\(calculateStreakValue())")
+                    .font(.system(size: 70, weight: .bold, design: .rounded))
+                    .foregroundColor(calculateStreakValue() > 0 ? .orange : .pink)
+                
+                Text("day streak")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
         }
     }
     
     var calendar: some View {
-        VStack {
-            CalendarHeader(font: .caption)
-            
-            LazyVGrid(columns: columns, spacing: 5) {
-                ForEach(entry.days) { day in
-                    
-                    if day.date?.monthInt != Date().monthInt {
-                        Text("")
-                    } else {
-                        Text(day.date!.formatted(.dateTime.day()))
-                            .font(.system(size: 10, weight: .bold))
-                            .fontWeight(.bold)
-                            .foregroundColor(day.didStudy ? .orange : .secondary)
-                            .frame(maxWidth: .infinity, minHeight: 19)
-                            .background(.orange.opacity(day.didStudy ? 0.3 : 0))
-                            .clipShape(Circle())
-                            .overlay {
-                                if dayNumberMatches(day.date!) {
-                                    Circle().stroke(.orange, lineWidth: 2)
+        Link(destination: URL(string: "calendar")!) {
+            VStack {
+                CalendarHeader(font: .caption)
+                
+                LazyVGrid(columns: columns, spacing: 5) {
+                    ForEach(entry.days) { day in
+                        
+                        if day.date?.monthInt != Date().monthInt {
+                            Text("")
+                        } else {
+                            Text(day.date!.formatted(.dateTime.day()))
+                                .font(.system(size: 10, weight: .bold))
+                                .fontWeight(.bold)
+                                .foregroundColor(day.didStudy ? .orange : .secondary)
+                                .frame(maxWidth: .infinity, minHeight: 19)
+                                .background(.orange.opacity(day.didStudy ? 0.3 : 0))
+                                .clipShape(Circle())
+                                .overlay {
+                                    if dayNumberMatches(day.date!) {
+                                        Circle().stroke(.orange, lineWidth: 2)
+                                    }
                                 }
-                            }
+                        }
                     }
                 }
             }
+            .padding(.leading)
         }
-        .padding(.leading)
     }
     
     func calculateStreakValue() -> Int {
