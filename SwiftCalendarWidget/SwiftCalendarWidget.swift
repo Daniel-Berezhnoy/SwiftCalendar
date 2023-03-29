@@ -68,13 +68,14 @@ struct SwiftCalendarWidgetEntryView : View {
                 MediumWidgetView(entry: entry, streakValue: streakValue)
                 
             case .accessoryCircular:
-                LockScreenCircular(entry: entry)
+                LockScreenCircularView(entry: entry)
                 
             case .accessoryRectangular:
-                Text("Test Rectangular")
+                LockScreenRectangularView(entry: entry)
                 
             case .accessoryInline:
                 Label("Streak - \(streakValue) days", systemImage: "swift")
+//                    .widgetURL(URL(string: "streak"))
                 
             case .systemSmall, .systemLarge, .systemExtraLarge:
                 EmptyView()
@@ -179,7 +180,6 @@ private struct MediumWidgetView: View {
                         } else {
                             Text(day.date!.formatted(.dateTime.day()))
                                 .font(.system(size: 10, weight: .bold))
-                                .fontWeight(.bold)
                                 .foregroundColor(day.didStudy ? .orange : .secondary)
                                 .frame(maxWidth: .infinity, minHeight: 19)
                                 .background(.orange.opacity(day.didStudy ? 0.3 : 0))
@@ -202,7 +202,7 @@ private struct MediumWidgetView: View {
     }
 }
 
-private struct LockScreenCircular: View {
+private struct LockScreenCircularView: View {
     var entry: CalendarEntry
     
     var body: some View {
@@ -226,5 +226,41 @@ private struct LockScreenCircular: View {
             .filter { $0.didStudy }
             .count
         return Double(numberOfDays)
+    }
+}
+
+private struct LockScreenRectangularView: View {
+    
+    var entry: CalendarEntry
+    let columns = Array(repeating: GridItem(.flexible()), count: 7)
+    
+    var body: some View {
+        LazyVGrid(columns: columns, spacing: 4) {
+            ForEach(entry.days) { day in
+                
+                if day.date?.monthInt != Date().monthInt {
+                    Text("")
+                        .font(.system(size: 7))
+                        .frame(maxWidth: .infinity)
+                    
+                } else {
+                    if day.didStudy {
+                        Image(systemName: "swift")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 7, height: 7)
+                    } else {
+                        Text(day.date!.formatted(.dateTime.day()))
+                            .font(.system(size: 7))
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+            }
+        }
+        .padding()
+    }
+    
+    func dayNumberMatches(_ date: Date) -> Bool {
+        Date().formatted(.dateTime.day()) == date.formatted(.dateTime.day())
     }
 }
