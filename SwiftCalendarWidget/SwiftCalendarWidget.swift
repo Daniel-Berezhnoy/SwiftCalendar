@@ -65,16 +65,16 @@ struct SwiftCalendarWidgetEntryView : View {
     var body: some View {
         switch family {
             case .systemMedium:
-                MediumWidgetView(entry: entry, streakValue: calculateStreakValue())
+                MediumWidgetView(entry: entry, streakValue: streakValue)
                 
             case .accessoryCircular:
-                Text("Test Circular")
+                LockScreenCircular(entry: entry, streakValue: streakValue)
                 
             case .accessoryRectangular:
                 Text("Test Rectangular")
                 
             case .accessoryInline:
-                Text("Test Inline")
+                Label("Streak - \(streakValue) days", systemImage: "swift")
                 
             case .systemSmall, .systemLarge, .systemExtraLarge:
                 EmptyView()
@@ -84,7 +84,7 @@ struct SwiftCalendarWidgetEntryView : View {
         }
     }
     
-    func calculateStreakValue() -> Int {
+    var streakValue: Int {
         guard !entry.days.isEmpty else { return 0 }
         
         var streakCount = 0
@@ -202,8 +202,12 @@ private struct MediumWidgetView: View {
     }
 }
 
-private struct LockScreenWidget: View {
+private struct LockScreenCircular: View {
+    
+    var entry: CalendarEntry
+    var streakValue: Int
+    
     var body: some View {
-        Text("Test")
+        Text("\(streakValue)")
     }
 }
