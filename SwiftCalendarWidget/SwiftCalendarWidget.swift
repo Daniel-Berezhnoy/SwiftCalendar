@@ -206,11 +206,11 @@ private struct LockScreenCircular: View {
     var entry: CalendarEntry
     
     var body: some View {
-        Gauge(value: daysStudied, in: 1 ... currentCalendarDays) {
+        Gauge(value: daysStudied, in: 0 ... currentCalendarDays) {
             Image(systemName: "swift")
             
         } currentValueLabel: {
-            Text("\(daysStudied)")
+            Text("\(daysStudied, format: .number)")
         }
         .gaugeStyle(.accessoryCircular)
     }
