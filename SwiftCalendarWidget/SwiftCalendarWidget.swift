@@ -74,8 +74,7 @@ struct SwiftCalendarWidgetEntryView : View {
                 LockScreenRectangularView(entry: entry)
                 
             case .accessoryInline:
-                Label("Streak - \(streakValue) days", systemImage: "swift")
-//                    .widgetURL(URL(string: "streak"))
+                LockScreenInlineView(streakValue: streakValue)
                 
             case .systemSmall, .systemLarge, .systemExtraLarge:
                 EmptyView()
@@ -213,6 +212,7 @@ private struct LockScreenCircularView: View {
             Text("\(daysStudied, format: .number)")
         }
         .gaugeStyle(.accessoryCircular)
+        .widgetURL(URL(string: "calendar"))
     }
     
     var currentCalendarDays: Double {
@@ -239,7 +239,7 @@ private struct LockScreenRectangularView: View {
             ForEach(entry.days) { day in
                 
                 if day.date?.monthInt != Date().monthInt {
-                    Text("")
+                    Text(" ")
                         .font(.system(size: 7))
                         .frame(maxWidth: .infinity)
                     
@@ -249,18 +249,30 @@ private struct LockScreenRectangularView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 7, height: 7)
+                        
                     } else {
                         Text(day.date!.formatted(.dateTime.day()))
                             .font(.system(size: 7))
                             .frame(maxWidth: .infinity)
+                            .bold(dayNumberMatches(day.date!))
                     }
                 }
             }
         }
         .padding()
+        .widgetURL(URL(string: "calendar"))
     }
     
     func dayNumberMatches(_ date: Date) -> Bool {
         Date().formatted(.dateTime.day()) == date.formatted(.dateTime.day())
+    }
+}
+
+private struct LockScreenInlineView: View {
+    let streakValue: Int
+    
+    var body: some View {
+        Label("Streak - \(streakValue) days", systemImage: "swift")
+            .widgetURL(URL(string: "streak"))
     }
 }
