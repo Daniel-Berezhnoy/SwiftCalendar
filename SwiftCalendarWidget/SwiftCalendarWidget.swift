@@ -68,7 +68,7 @@ struct SwiftCalendarWidgetEntryView : View {
                 MediumWidgetView(entry: entry, streakValue: streakValue)
                 
             case .accessoryCircular:
-                LockScreenCircular(entry: entry, streakValue: streakValue)
+                LockScreenCircular(entry: entry)
                 
             case .accessoryRectangular:
                 Text("Test Rectangular")
@@ -203,11 +203,28 @@ private struct MediumWidgetView: View {
 }
 
 private struct LockScreenCircular: View {
-    
     var entry: CalendarEntry
-    var streakValue: Int
     
     var body: some View {
-        Text("\(streakValue)")
+        Gauge(value: daysStudied, in: 1 ... currentCalendarDays) {
+            Image(systemName: "swift")
+            
+        } currentValueLabel: {
+            Text("\(daysStudied)")
+        }
+        .gaugeStyle(.accessoryCircular)
+    }
+    
+    var currentCalendarDays: Double {
+        let numberOfDays = entry.days.filter { $0.date?.monthInt == Date().monthInt }.count
+        return Double(numberOfDays)
+    }
+    
+    var daysStudied: Double {
+        let numberOfDays = entry.days
+            .filter { $0.date?.monthInt == Date().monthInt }
+            .filter { $0.didStudy }
+            .count
+        return Double(numberOfDays)
     }
 }
