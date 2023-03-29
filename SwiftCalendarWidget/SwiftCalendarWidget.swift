@@ -27,7 +27,7 @@ struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> CalendarEntry {
         CalendarEntry(date: Date(), days: [])
     }
-
+    
     func getSnapshot(in context: Context, completion: @escaping (CalendarEntry) -> ()) {
         do {
             let days = try viewContext.fetch(dayFetchRequest)
@@ -37,7 +37,7 @@ struct Provider: TimelineProvider {
             print("Widget Failed to fetch days in the snapshot. \n\(error.localizedDescription)\n")
         }
     }
-
+    
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         do {
             let days = try viewContext.fetch(dayFetchRequest)
@@ -59,9 +59,58 @@ struct CalendarEntry: TimelineEntry {
 
 struct SwiftCalendarWidgetEntryView : View {
     
+    @Environment(\.widgetFamily) private var family
+    var entry: CalendarEntry
+    
+    var body: some View {
+//        switch family {
+//            case .systemMedium:
+                MediumWidgetView(entry: entry)
+//                
+//            case .systemSmall:
+//                <#code#>
+//            case .systemLarge:
+//                <#code#>
+//            case .systemExtraLarge:
+//                <#code#>
+//            case .accessoryCircular:
+//                <#code#>
+//            case .accessoryRectangular:
+//                <#code#>
+//            case .accessoryInline:
+//                <#code#>
+//            @unknown default:
+//                <#code#>
+//        }
+    }
+}
+
+struct SwiftCalendarWidget: Widget {
+    let kind: String = "SwiftCalendarWidget"
+    
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+            SwiftCalendarWidgetEntryView(entry: entry)
+        }
+        .configurationDisplayName("Swift Study Calendar")
+        .description("Track days you study Swift with Streaks!")
+        .supportedFamilies([.systemMedium])
+    }
+}
+
+struct SwiftCalendarWidget_Previews: PreviewProvider {
+    static var previews: some View {
+        SwiftCalendarWidgetEntryView(entry: CalendarEntry(date: Date(), days: []))
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+    }
+}
+
+// MARK: UI Components for different Widget Sizes
+private struct MediumWidgetView: View {
+    
     var entry: CalendarEntry
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
-
+    
     var body: some View {
         HStack {
             streakView
@@ -140,22 +189,8 @@ struct SwiftCalendarWidgetEntryView : View {
     }
 }
 
-struct SwiftCalendarWidget: Widget {
-    let kind: String = "SwiftCalendarWidget"
-
-    var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            SwiftCalendarWidgetEntryView(entry: entry)
-        }
-        .configurationDisplayName("Swift Study Calendar")
-        .description("Track days you study Swift with Streaks!")
-        .supportedFamilies([.systemMedium])
-    }
-}
-
-struct SwiftCalendarWidget_Previews: PreviewProvider {
-    static var previews: some View {
-        SwiftCalendarWidgetEntryView(entry: CalendarEntry(date: Date(), days: []))
-            .previewContext(WidgetPreviewContext(family: .systemMedium))
+private struct LockScreenWidget: View {
+    var body: some View {
+        Text("Test")
     }
 }
