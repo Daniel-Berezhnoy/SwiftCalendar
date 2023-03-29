@@ -63,44 +63,44 @@ struct SwiftCalendarWidgetEntryView : View {
     var entry: CalendarEntry
     
     var body: some View {
-//        switch family {
-//            case .systemMedium:
-            MediumWidgetView(entry: entry, streakValue: calculateStreakValue())
-//
-//            case .systemSmall:
-//                <#code#>
-//            case .systemLarge:
-//                <#code#>
-//            case .systemExtraLarge:
-//                <#code#>
-//            case .accessoryCircular:
-//                <#code#>
-//            case .accessoryRectangular:
-//                <#code#>
-//            case .accessoryInline:
-//                <#code#>
-//            @unknown default:
-//                <#code#>
-//        }
+        switch family {
+            case .systemMedium:
+                MediumWidgetView(entry: entry, streakValue: calculateStreakValue())
+                
+            case .accessoryCircular:
+                Text("Test Circular")
+                
+            case .accessoryRectangular:
+                Text("Test Rectangular")
+                
+            case .accessoryInline:
+                Text("Test Inline")
+                
+            case .systemSmall, .systemLarge, .systemExtraLarge:
+                EmptyView()
+                
+            @unknown default:
+                EmptyView()
+        }
     }
     
     func calculateStreakValue() -> Int {
         guard !entry.days.isEmpty else { return 0 }
-
+        
         var streakCount = 0
         let nonFutureDays = entry.days.filter { $0.date!.dayInt <= Date().dayInt }
-
+        
         for day in nonFutureDays.reversed() {
             if day.didStudy {
                 streakCount += 1
-
+                
             } else {
                 if day.date!.dayInt != Date().dayInt {
                     break
                 }
             }
         }
-
+        
         return streakCount
     }
 }
@@ -113,8 +113,11 @@ struct SwiftCalendarWidget: Widget {
             SwiftCalendarWidgetEntryView(entry: entry)
         }
         .configurationDisplayName("Swift Study Calendar")
-        .description("Track days you study Swift with Streaks!")
-        .supportedFamilies([.systemMedium])
+        .description("Track the days you study Swift with Streaks!")
+        .supportedFamilies([.systemMedium,
+                            .accessoryCircular,
+                            .accessoryRectangular,
+                            .accessoryInline])
     }
 }
 
@@ -122,6 +125,15 @@ struct SwiftCalendarWidget_Previews: PreviewProvider {
     static var previews: some View {
         SwiftCalendarWidgetEntryView(entry: CalendarEntry(date: Date(), days: []))
             .previewContext(WidgetPreviewContext(family: .systemMedium))
+        
+        SwiftCalendarWidgetEntryView(entry: CalendarEntry(date: Date(), days: []))
+            .previewContext(WidgetPreviewContext(family: .accessoryCircular))
+        
+        SwiftCalendarWidgetEntryView(entry: CalendarEntry(date: Date(), days: []))
+            .previewContext(WidgetPreviewContext(family: .accessoryRectangular))
+        
+        SwiftCalendarWidgetEntryView(entry: CalendarEntry(date: Date(), days: []))
+            .previewContext(WidgetPreviewContext(family: .accessoryInline))
     }
 }
 
