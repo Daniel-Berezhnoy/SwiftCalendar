@@ -23,7 +23,7 @@ struct CalendarView: View {
     private var days: FetchedResults<Day>
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 header
                 dayGrid
@@ -33,10 +33,10 @@ struct CalendarView: View {
             .navigationTitle(viewModel.currentMonthName)
             .onAppear { createCalendar() }
         }
-        .alert("Error", isPresented: $viewModel.showingErrorAlert) {
-            Button("Ok") { viewModel.showingErrorAlert = false }
+        .alert("You can't study in the future!", isPresented: $viewModel.showingErrorAlert) {
+            Button("Ok") {}
         } message: {
-            Text("You can't study in the future! \nPlease select the date when you actually studied")
+            Text("Please select the date when you actually studied.")
         }
     }
     
