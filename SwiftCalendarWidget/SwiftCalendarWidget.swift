@@ -65,8 +65,8 @@ struct SwiftCalendarWidgetEntryView : View {
     var body: some View {
 //        switch family {
 //            case .systemMedium:
-                MediumWidgetView(entry: entry)
-//                
+            MediumWidgetView(entry: entry, streakValue: calculateStreakValue())
+//
 //            case .systemSmall:
 //                <#code#>
 //            case .systemLarge:
@@ -82,6 +82,26 @@ struct SwiftCalendarWidgetEntryView : View {
 //            @unknown default:
 //                <#code#>
 //        }
+    }
+    
+    func calculateStreakValue() -> Int {
+        guard !entry.days.isEmpty else { return 0 }
+
+        var streakCount = 0
+        let nonFutureDays = entry.days.filter { $0.date!.dayInt <= Date().dayInt }
+
+        for day in nonFutureDays.reversed() {
+            if day.didStudy {
+                streakCount += 1
+
+            } else {
+                if day.date!.dayInt != Date().dayInt {
+                    break
+                }
+            }
+        }
+
+        return streakCount
     }
 }
 
@@ -109,6 +129,7 @@ struct SwiftCalendarWidget_Previews: PreviewProvider {
 private struct MediumWidgetView: View {
     
     var entry: CalendarEntry
+    let streakValue: Int
     let columns = Array(repeating: GridItem(.flexible()), count: 7)
     
     var body: some View {
@@ -122,9 +143,9 @@ private struct MediumWidgetView: View {
     var streakView: some View {
         Link(destination: URL(string: "streak")!) {
             VStack {
-                Text("\(calculateStreakValue())")
+                Text("\(streakValue)")
                     .font(.system(size: 70, weight: .bold, design: .rounded))
-                    .foregroundColor(calculateStreakValue() > 0 ? .orange : .pink)
+                    .foregroundColor(streakValue > 0 ? .orange : .pink)
                 
                 Text("day streak")
                     .font(.caption)
@@ -162,26 +183,6 @@ private struct MediumWidgetView: View {
             }
             .padding(.leading)
         }
-    }
-    
-    func calculateStreakValue() -> Int {
-        guard !entry.days.isEmpty else { return 0 }
-        
-        var streakCount = 0
-        let nonFutureDays = entry.days.filter { $0.date!.dayInt <= Date().dayInt }
-        
-        for day in nonFutureDays.reversed() {
-            if day.didStudy {
-                streakCount += 1
-                
-            } else {
-                if day.date!.dayInt != Date().dayInt {
-                    break
-                }
-            }
-        }
-        
-        return streakCount
     }
     
     func dayNumberMatches(_ date: Date) -> Bool {
